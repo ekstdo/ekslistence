@@ -72,6 +72,7 @@ pub fn exec_for_ints(c: &mut Command) -> Result<Vec<i64>, std::io::Error> {
 }
 
 
+
 // pub fn exec_for_str(cmd: &mut Command) -> Result<String, std::io::Error> {
 //     cmd.output()?.stdout
 // }

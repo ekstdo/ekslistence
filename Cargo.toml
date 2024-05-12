@@ -22,6 +22,7 @@ pipewire = "0.8.0"
 image = "0.25.1"
 shellexpand = "3.1.0"
 svg = "0.17.0"
+pulse = { version = "2.0", package = "libpulse-binding" }
 
 [build-dependencies]
 slint-build = "1.5"

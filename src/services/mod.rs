@@ -1,5 +1,6 @@
 #[macro_use]
 pub mod utils;
+pub mod audio;
 pub mod hyprland;
 pub mod battery;
 pub mod bluetooth;

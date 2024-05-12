@@ -147,13 +147,20 @@ impl CliphistService {
         }
 
         let mut w = self.data.write().await;
+        let mut changed = false;
         for i in is {
             let i = i as usize;
             if w.entries.contains_key(&i) {
                 continue
             }
+            changed = true;
             let bytes_vec = Self::get_i(i)?.bytes().collect::<std::io::Result<Vec<u8>>>()?;
             w.entries.insert(i, bytes_vec.into());
+        }
+
+        if changed {
+            let _ = self.sender.changed.send(self.data.clone());
+            let _ = self.sender.entries.send(self.data.clone());
         }
 
         Ok(())
