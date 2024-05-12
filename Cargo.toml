@@ -1,0 +1,27 @@
+[package]
+name = "ekslistence"
+version = "0.1.0"
+authors = ["ekstdo <minhala2003@mailo.com>"]
+edition = "2021"
+build = "build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+slint = "1.5"
+chrono = { version = "0.4", features = ["unstable-locales"] }
+networkmanager = "0.4"
+dbus = "0.9"
+zbus = { version = "4.2", default-features = false, features = ["tokio"] }
+bluer = {version="0.17.1", features=["bluetoothd"]}
+tokio = { version = "1", features = ["full"] }
+tokio-stream = "0.1"
+linicon = "2.3.0"
+notify = { version = "6.1.1", default-features = false, features = ["serde"] }
+pipewire = "0.8.0"
+image = "0.25.1"
+shellexpand = "3.1.0"
+svg = "0.17.0"
+
+[build-dependencies]
+slint-build = "1.5"

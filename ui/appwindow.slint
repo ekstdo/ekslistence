@@ -1,0 +1,63 @@
+import { Button, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+export global TimeAdapter {
+    in-out property <string> date: "0000-00-00";
+    in-out property <string> time: "00:00:00";
+}
+
+export component TimeWidget {
+    in property <string> date <=> TimeAdapter.date;
+    in property <string> time <=> TimeAdapter.time;
+    callback clicked <=> i-touch-area.clicked;
+    
+
+    VerticalLayout {
+        spacing: 5px;
+        i-touch-area := TouchArea {}
+        Text {
+            text: date;
+        }
+        Text {
+            text: time;
+        }
+
+        @children
+    }
+}
+
+export global BatteryAdapter {
+    in-out property<int> percentage: 0;
+}
+
+export component BatteryWidget {
+    in property<int> percentage <=> BatteryAdapter.percentage;
+
+    Text {
+        text: "\{percentage}%";
+    }
+}
+
+export component AppWindow inherits Window {
+    in-out property<int> counter: 42;
+    no-frame: true;
+    always-on-top: true;
+    callback request-increase-value();
+    HorizontalBox {
+        Button {
+            text: "1";
+        }
+        BatteryWidget {
+        }
+        Text {
+            text: "Config: \{root.counter}";
+        }
+        TextInput {
+            text: "test";
+        }
+        TimeWidget {
+            clicked => {
+                root.request-increase-value();
+            }
+        }
+    }
+}

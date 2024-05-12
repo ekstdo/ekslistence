@@ -1,0 +1,16 @@
+- [ ] Services 
+    - [ ] Applications
+    - [ ] Audio
+    - [X] Battery
+    - [-] Bluetooth
+    - [X] Brightness
+    - [-] Clipboard
+    - [ ] Greetd
+    - [ ] Hyprland
+    - [ ] Mpris
+    - [ ] Network
+    - [ ] Notifications
+    - [ ] Powerprofile
+    - [ ] Systray
+    - [ ] WebAPI
+    - [ ] Weather
