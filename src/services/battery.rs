@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+use log::{info, warn};
 use tokio::sync::{broadcast::{channel, Sender}, RwLock};
 use zbus::{proxy, Connection, fdo::PropertiesProxy};
 use tokio_stream::StreamExt;
@@ -218,20 +219,29 @@ impl BatterySender {
 }
 
 #[derive(Clone, Debug)]
+pub enum BatteryIcons {
+    AGSLike,
+    Internal
+}
+
+#[derive(Clone, Debug)]
 pub struct BatteryService {
     pub sender: BatterySender,
     pub data: Arc<RwLock<BatteryData>>,
+
+    pub icons: BatteryIcons
 }
 
 
 
 
 impl BatteryService {
-    pub async fn new() -> zbus::Result<Arc<RwLock<Self>>> {
+    pub async fn new(icons: BatteryIcons) -> zbus::Result<Arc<RwLock<Self>>> {
         let battery_data = Arc::new(RwLock::new(BatteryData::default()));
         let q = Arc::new(RwLock::new(Self {
             data: battery_data.clone(),
             sender: BatterySender::new(),
+            icons
         }));
         {
             let p = q.clone();
@@ -264,9 +274,15 @@ impl BatteryService {
         let level = (percent / 10) * 10;
         let charged = state == BatteryState::FullyCharged as u8 || state == BatteryState::Charging as u8&& percent == 100;
 
+
         let time_remaining = if charging { bip.time_to_full().await? } else { bip.time_to_empty().await? };
-        let state = if state == BatteryState::Charging as u8 { "-charging" } else if charged { "-charged" } else { "" };
-        let icon_name = format!("battery-level-{}{}-symbolic", level, state);
+        let icon_name = match self.icons {
+            BatteryIcons::AGSLike => {
+                let state = if state == BatteryState::Charging as u8 { "-charging" } else if charged { "-charged" } else { "" };
+                format!("battery-level-{}{}-symbolic", level, state)
+            }
+            BatteryIcons::Internal => bip.icon_name().await?,
+        };
 
         let energy = bip.energy().await?;
         let energy_full = bip.energy_full().await?;
@@ -299,7 +315,7 @@ impl BatteryService {
     async fn update(&mut self) {
         match self.sender.changed.send(self.data.clone()) {
             Ok(_) => {},
-            Err(_) => {dbg!("No receiver");}
+            Err(_) => {info!("No receiver");}
         }
     }
 }

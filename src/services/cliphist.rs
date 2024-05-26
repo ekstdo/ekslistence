@@ -91,7 +91,7 @@ impl CliphistService {
             .or(shellexpand::env("$HOME/.cache/cliphist/db"))
             .map_err(CliphistError::DatabaseNotFound)?;
 
-        let (watcher, mut rx) = async_file_watcher(Path::new(&path.into_owned()).as_ref())
+        let (watcher, mut rx) = async_file_watcher(Path::new(&path.into_owned()))
             .await.map_err(CliphistError::WatcherError)?;
 
         let service = Arc::new(RwLock::new(Self{

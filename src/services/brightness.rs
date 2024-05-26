@@ -1,4 +1,4 @@
-use std::{fs, path::{Path, PathBuf}, process::Command, sync::Arc};
+use std::{fs, path::{PathBuf}, process::Command, sync::Arc};
 
 use tokio::sync::{broadcast, RwLock};
 
@@ -44,7 +44,7 @@ pub enum BacklightError{
 impl BrightnessService {
     pub async fn new() -> Result<Arc<RwLock<BrightnessService>>, BacklightError> {
         let max = BrightnessService::run_to_int(Command::new("brightnessctl").arg("max"))?;
-        let (watcher, mut rx) = async_file_watcher(BrightnessService::get_path()?.as_ref())
+        let (watcher, mut rx) = async_file_watcher::<&std::path::Path>(BrightnessService::get_path()?.as_ref())
             .await
             .map_err(BacklightError::FileWatchError)?;
 
